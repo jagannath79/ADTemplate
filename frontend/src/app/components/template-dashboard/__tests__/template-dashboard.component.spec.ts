@@ -24,7 +24,16 @@ describe('TemplateDashboardComponent', () => {
   it('should create the dashboard component', () => {
     const fixture = TestBed.createComponent(TemplateDashboardComponent);
     fixture.detectChanges();
-    httpMock.expectOne('/api/templates').flush([]);
+    httpMock
+      .expectOne((req) =>
+        req.method === 'GET' &&
+        req.url === '/api/templates' &&
+        req.params.get('page') === '1' &&
+        req.params.get('pageSize') === '50' &&
+        req.params.get('sortField') === 'templateId' &&
+        req.params.get('sortDirection') === 'asc'
+      )
+      .flush({ items: [], total: 0, page: 1, pageSize: 50 });
     const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
