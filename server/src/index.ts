@@ -1,7 +1,7 @@
 import { config as loadEnv } from 'dotenv';
 
-import app from './app';
-import { closePool } from './config/database';
+import app from './app.js';
+import { closePool } from './config/database.js';
 
 loadEnv();
 

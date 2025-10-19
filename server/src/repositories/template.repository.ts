@@ -1,7 +1,7 @@
 import sql from 'mssql';
 
-import { getPool } from '../config/database';
-import { Template, TemplateInput } from '../models/template';
+import { getPool } from '../config/database.js';
+import { Template, TemplateInput } from '../models/template.js';
 
 const mapRecord = (record: sql.IResult<any>): Template[] =>
   record.recordset.map((row) => ({

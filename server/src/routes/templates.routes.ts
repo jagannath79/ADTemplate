@@ -5,7 +5,7 @@ import {
   deleteTemplateHandler,
   listTemplates,
   updateTemplateHandler
-} from '../controllers/template.controller';
+} from '../controllers/template.controller.js';
 
 const router = Router();
 
