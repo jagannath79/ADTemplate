@@ -1,0 +1,13 @@
+{
+  "name": "ad-template-monorepo",
+  "private": true,
+  "workspaces": ["frontend", "server"],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "start": "concurrently \"npm run dev --workspace server\" \"npm start --workspace frontend\"",
+    "lint": "npm run lint --workspace server"
+  },
+  "devDependencies": {
+    "concurrently": "8.2.2"
+  }
+}
