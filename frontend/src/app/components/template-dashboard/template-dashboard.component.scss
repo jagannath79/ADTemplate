@@ -87,8 +87,10 @@
       background: rgba(248, 250, 252, 0.85);
     }
 
-    td.mat-cell {
+    td.mat-cell,
+    td.mat-footer-cell {
       background: rgba(15, 23, 42, 0.6);
+      color: #f8fafc;
     }
 
     tr.mat-row:hover td {
