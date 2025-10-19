@@ -34,3 +34,10 @@ frontend/.env
 coverage/
 .tmp/
 temp/
+
+.angular/
+**/.angular/
+dist/
+**/dist/
+node_modules/
+**/node_modules/
