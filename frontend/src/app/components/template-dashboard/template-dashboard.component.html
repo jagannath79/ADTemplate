@@ -1,0 +1,120 @@
+<section class="dashboard">
+  <mat-card class="dashboard__header">
+    <div class="dashboard__title">
+      <h1>Active Directory Template Catalogue</h1>
+      <p>Manage reusable provisioning templates with enterprise-grade governance.</p>
+    </div>
+    <div class="dashboard__actions">
+      <button mat-flat-button color="primary" (click)="handleCreate()">
+        <mat-icon>add</mat-icon>
+        Create Template
+      </button>
+    </div>
+  </mat-card>
+
+  <mat-card class="dashboard__content">
+    <div class="dashboard__toolbar">
+      <mat-form-field appearance="outline">
+        <mat-label>Search templates</mat-label>
+        <input matInput #filterInput (keyup)="applyFilter(filterInput.value)" placeholder="Search by any field" />
+        <button
+          mat-icon-button
+          type="button"
+          matSuffix
+          matTooltip="Clear"
+          aria-label="Clear filter"
+          (click)="filterInput.value = ''; applyFilter('')"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="dashboard__table" *ngIf="!isLoading; else loading">
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2" *ngIf="dataSource.data.length > 0; else emptyState">
+        <ng-container matColumnDef="region">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Region</th>
+          <td mat-cell *matCellDef="let element">{{ element.region }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Country</th>
+          <td mat-cell *matCellDef="let element">{{ element.country }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="jobFamily">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Job Family</th>
+          <td mat-cell *matCellDef="let element">{{ element.jobFamily }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="locationName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Location Name</th>
+          <td mat-cell *matCellDef="let element">{{ element.locationName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="locationId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Location ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.locationId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="company">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Company</th>
+          <td mat-cell *matCellDef="let element">{{ element.company }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="costCenterDivision">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cost Center Division</th>
+          <td mat-cell *matCellDef="let element">{{ element.costCenterDivision }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="templateId">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Template ID</th>
+          <td mat-cell *matCellDef="let element">{{ element.templateId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="templateObjectGuid">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Object GUID</th>
+          <td mat-cell *matCellDef="let element">{{ element.templateObjectGuid }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="movePath">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Move Path</th>
+          <td mat-cell *matCellDef="let element">{{ element.movePath }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element" class="dashboard__actions-cell">
+            <button mat-icon-button matTooltip="Edit" (click)="handleEdit(element)">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" matTooltip="Delete" (click)="handleDelete(element)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <ng-template #emptyState>
+        <div class="dashboard__empty">
+          <mat-icon>inventory_2</mat-icon>
+          <h3>No templates found</h3>
+          <p>Create a template to kickstart your automation catalog.</p>
+        </div>
+      </ng-template>
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 25, 50]"
+        [pageSize]="10"
+        showFirstLastButtons
+      ></mat-paginator>
+    </div>
+    <ng-template #loading>
+      <div class="dashboard__loading">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading templates...</p>
+      </div>
+    </ng-template>
+  </mat-card>
+</section>

@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{ title }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" class="form">
+  <mat-dialog-content class="form__grid">
+    <mat-form-field appearance="outline" *ngFor="let field of fields">
+      <mat-label>{{ field.label }}</mat-label>
+      <input matInput [formControlName]="field.key" />
+      <mat-error *ngIf="form.get(field.key)?.hasError('required')">{{ field.label }} is required.</mat-error>
+      <mat-error *ngIf="form.get(field.key)?.hasError('maxlength')">Maximum length exceeded.</mat-error>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end" class="form__actions">
+    <button mat-button type="button" (click)="cancel()">Cancel</button>
+    <button mat-flat-button color="primary" type="submit">{{ actionLabel }}</button>
+  </mat-dialog-actions>
+</form>
