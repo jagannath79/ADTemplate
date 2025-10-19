@@ -15,14 +15,22 @@ export type TemplateDialogData = {
 @Component({
   selector: 'app-template-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   templateUrl: './template-form.component.html',
   styleUrls: ['./template-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TemplateFormComponent {
-  readonly title = this.data.mode === 'create' ? 'Create Template' : 'Update Template';
-  readonly actionLabel = this.data.mode === 'create' ? 'Create' : 'Save';
+  readonly title: string;
+  readonly actionLabel: string;
+  readonly form: FormGroup;
 
   readonly fields = [
     { key: 'region', label: 'Region' },
@@ -37,37 +45,35 @@ export class TemplateFormComponent {
     { key: 'movePath', label: 'Move Path' }
   ] as const;
 
-  readonly form: FormGroup = this.fb.group({
-    region: [this.data.template?.region ?? '', [Validators.required, Validators.maxLength(120)]],
-    country: [this.data.template?.country ?? '', [Validators.required, Validators.maxLength(120)]],
-    jobFamily: [this.data.template?.jobFamily ?? '', [Validators.required, Validators.maxLength(120)]],
-    locationName: [this.data.template?.locationName ?? '', [Validators.required, Validators.maxLength(120)]],
-    locationId: [this.data.template?.locationId ?? '', [Validators.required, Validators.maxLength(120)]],
-    company: [this.data.template?.company ?? '', [Validators.required, Validators.maxLength(120)]],
-    costCenterDivision: [
-      this.data.template?.costCenterDivision ?? '',
-      [Validators.required, Validators.maxLength(120)]
-    ],
-    templateId: [this.data.template?.templateId ?? '', [Validators.required, Validators.maxLength(120)]],
-    templateObjectGuid: [
-      this.data.template?.templateObjectGuid ?? '',
-      [Validators.required, Validators.maxLength(120)]
-    ],
-    movePath: [this.data.template?.movePath ?? '', [Validators.required, Validators.maxLength(255)]]
-  });
-
   constructor(
     private readonly fb: FormBuilder,
     private readonly dialogRef: MatDialogRef<TemplateFormComponent, TemplateDraft>,
     @Inject(MAT_DIALOG_DATA) private readonly data: TemplateDialogData
-  ) {}
+  ) {
+    // Safe to reference DI values here (avoids "used before initialization")
+    this.title = data.mode === 'create' ? 'Create Template' : 'Update Template';
+    this.actionLabel = data.mode === 'create' ? 'Create' : 'Save';
+
+    this.form = this.fb.group({
+      region: [data.template?.region ?? '', [Validators.required, Validators.maxLength(120)]],
+      country: [data.template?.country ?? '', [Validators.required, Validators.maxLength(120)]],
+      jobFamily: [data.template?.jobFamily ?? '', [Validators.required, Validators.maxLength(120)]],
+      locationName: [data.template?.locationName ?? '', [Validators.required, Validators.maxLength(120)]],
+      locationId: [data.template?.locationId ?? '', [Validators.required, Validators.maxLength(120)]],
+      company: [data.template?.company ?? '', [Validators.required, Validators.maxLength(120)]],
+      // Optional fields (keep max length constraints)
+      costCenterDivision: [data.template?.costCenterDivision ?? '', [Validators.maxLength(120)]],
+      templateId: [data.template?.templateId ?? '', [Validators.required, Validators.maxLength(120)]],
+      templateObjectGuid: [data.template?.templateObjectGuid ?? '', [Validators.maxLength(120)]],
+      movePath: [data.template?.movePath ?? '', [Validators.required, Validators.maxLength(255)]]
+    });
+  }
 
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-
     this.dialogRef.close(this.form.value as TemplateDraft);
   }
 

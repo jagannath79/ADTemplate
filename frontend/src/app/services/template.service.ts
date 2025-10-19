@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { Template, TemplateDraft } from '../models/template.model';
 import { environment } from '../../environments/environment';
 
@@ -9,19 +8,19 @@ export class TemplateService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiBaseUrl}/templates`;
 
-  getTemplates(): Observable<Template[]> {
+  getTemplates() {
     return this.http.get<Template[]>(this.baseUrl);
   }
 
-  createTemplate(payload: TemplateDraft): Observable<Template> {
+  createTemplate(payload: TemplateDraft) {
     return this.http.post<Template>(this.baseUrl, payload);
   }
 
-  updateTemplate(id: number, payload: TemplateDraft): Observable<Template> {
+  updateTemplate(id: number, payload: TemplateDraft) {
     return this.http.put<Template>(`${this.baseUrl}/${id}`, payload);
   }
 
-  deleteTemplate(id: number): Observable<void> {
+  deleteTemplate(id: number) {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }

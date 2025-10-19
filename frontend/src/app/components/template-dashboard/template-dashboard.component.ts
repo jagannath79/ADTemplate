@@ -20,7 +20,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Subject, finalize, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Template, TemplateDraft } from '../../models/template.model';
 import { TemplateService } from '../../services/template.service';
 import { TemplateFormComponent, TemplateDialogData } from './template-form/template-form.component';
@@ -81,8 +81,13 @@ export class TemplateDashboardComponent implements OnInit, AfterViewInit, OnDest
         .map((value) => String(value ?? '').toLowerCase())
         .some((value) => value.includes(normalizedFilter));
     };
-    this.dataSource.sortingDataAccessor = (item: Template, property: string) =>
-      String((item as Record<string, unknown>)[property] ?? '').toLowerCase();
+
+    // Strongly-typed sorting accessor
+    this.dataSource.sortingDataAccessor = (item: Template, property: string) => {
+      const key = property as keyof Template;
+      const value = item[key];
+      return String((value ?? '') as string).toLowerCase();
+    };
   }
 
   ngOnInit(): void {
@@ -112,25 +117,29 @@ export class TemplateDashboardComponent implements OnInit, AfterViewInit, OnDest
     this.cdr.markForCheck();
   }
 
+  // ---- Rewritten per your steps (no finalize operator; coalesce values) ----
   loadTemplates(): void {
     this.isLoading = true;
     this.cdr.markForCheck();
-    this.templateService
+
+    const sub = this.templateService
       .getTemplates()
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.markForCheck();
-        }),
-        takeUntil(this.destroy$)
-      )
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (templates) => {
-          this.dataSource.data = templates;
+        next: (templates: Template[]) => {
+          this.dataSource.data = (templates ?? []) as Template[];
           this.cdr.markForCheck();
         },
-        error: () => this.snackBar.open('Unable to load templates.', 'Dismiss', { duration: 5000 })
+        error: () => {
+          this.snackBar.open('Unable to load templates.', 'Dismiss', { duration: 5000 });
+        }
       });
+
+    // finalize without the operator
+    sub.add(() => {
+      this.isLoading = false;
+      this.cdr.markForCheck();
+    });
   }
 
   handleCreate(): void {
@@ -166,7 +175,8 @@ export class TemplateDashboardComponent implements OnInit, AfterViewInit, OnDest
       disableClose: true
     });
 
-    dialogRef.afterClosed().pipe(takeUntil(this.destroy$)).subscribe((draft?: TemplateDraft) => {
+    // afterClosed() completes automatically — no takeUntil here
+    dialogRef.afterClosed().subscribe((draft?: TemplateDraft) => {
       if (!draft) {
         return;
       }
@@ -176,7 +186,7 @@ export class TemplateDashboardComponent implements OnInit, AfterViewInit, OnDest
           .createTemplate(draft)
           .pipe(takeUntil(this.destroy$))
           .subscribe({
-            next: (created) => {
+            next: (created: Template) => {
               this.snackBar.open('Template created successfully.', 'Dismiss', { duration: 4000 });
               this.dataSource.data = [...this.dataSource.data, created];
               this.cdr.markForCheck();
@@ -194,7 +204,7 @@ export class TemplateDashboardComponent implements OnInit, AfterViewInit, OnDest
         .updateTemplate(data.template.id, draft)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
-          next: (updated) => {
+          next: (updated: Template) => {
             this.snackBar.open('Template updated successfully.', 'Dismiss', { duration: 4000 });
             this.dataSource.data = this.dataSource.data.map((item) =>
               item.id === updated.id ? updated : item
