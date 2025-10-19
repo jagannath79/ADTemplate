@@ -2,6 +2,7 @@
   "name": "ad-template-dashboard-api",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "start": "node dist/index.js",

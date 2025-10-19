@@ -5,8 +5,8 @@ import {
   deleteTemplate,
   getTemplates,
   updateTemplate
-} from '../repositories/template.repository';
-import { TemplateInput } from '../models/template';
+} from '../repositories/template.repository.js';
+import { TemplateInput } from '../models/template.js';
 
 const REQUIRED_FIELDS = [
   'region',
