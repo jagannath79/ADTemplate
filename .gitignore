@@ -4,3 +4,10 @@ dist/
 **/dist/
 node_modules/
 **/node_modules/
+
+.angular/
+**/.angular/
+dist/
+**/dist/
+node_modules/
+**/node_modules/
