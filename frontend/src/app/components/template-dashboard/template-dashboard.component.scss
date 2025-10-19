@@ -1,0 +1,151 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 40%, #1f2937 100%);
+  min-height: calc(100vh - 64px);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
+    border-radius: 18px;
+    box-shadow: 0 30px 60px rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(20px);
+  }
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    h1 {
+      margin: 0;
+      font-weight: 600;
+      font-size: 1.875rem;
+    }
+
+    p {
+      margin: 0;
+      color: rgba(248, 250, 252, 0.75);
+    }
+  }
+
+  &__actions button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+  }
+
+  &__content {
+    padding: 1.5rem;
+    border-radius: 18px;
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.35);
+    background: #0b1120;
+    color: #f8fafc;
+  }
+
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+
+    mat-form-field {
+      min-width: 320px;
+    }
+  }
+
+  &__table {
+    overflow: auto;
+    border-radius: 12px;
+
+    table {
+      width: 100%;
+      min-width: 960px;
+    }
+
+    th.mat-header-cell {
+      text-transform: uppercase;
+      font-weight: 600;
+      color: rgba(15, 23, 42, 0.8);
+      background: rgba(248, 250, 252, 0.85);
+    }
+
+    td.mat-cell {
+      background: rgba(15, 23, 42, 0.6);
+    }
+
+    tr.mat-row:hover td {
+      background: rgba(59, 130, 246, 0.15);
+    }
+  }
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 3rem 1rem;
+    color: rgba(248, 250, 252, 0.7);
+
+    mat-icon {
+      font-size: 3rem;
+      height: 3rem;
+      width: 3rem;
+    }
+
+    h3 {
+      margin: 0;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    p {
+      margin: 0;
+      max-width: 360px;
+      text-align: center;
+    }
+  }
+
+  &__actions-cell {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-end;
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    color: rgba(248, 250, 252, 0.75);
+    padding: 3rem 0;
+  }
+}
+
+@media (max-width: 960px) {
+  .dashboard {
+    padding: 1rem;
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+
+    &__toolbar {
+      justify-content: stretch;
+
+      mat-form-field {
+        width: 100%;
+        min-width: unset;
+      }
+    }
+  }
+}
