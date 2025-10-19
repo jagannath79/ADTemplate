@@ -13,3 +13,10 @@ export interface Template {
 }
 
 export type TemplateDraft = Omit<Template, 'id'>;
+
+export interface TemplatePage {
+  items: Template[];
+  total: number;
+  page: number;
+  pageSize: number;
+}

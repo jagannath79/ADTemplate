@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import {
   createTemplate,
   deleteTemplate,
-  getTemplates,
+  getTemplatesPaginated,
   updateTemplate
 } from '../repositories/template.repository.js';
 import { TemplateInput } from '../models/template.js';
@@ -44,10 +44,41 @@ const parseTemplateInput = (body: TemplateBody): TemplateInput => ({
   movePath: String(body.movePath ?? '')
 });
 
-export const listTemplates = async (_req: Request, res: Response): Promise<void> => {
+const toPositiveInt = (value: unknown, fallback: number): number => {
+  const parsed = Number.parseInt(String(value ?? ''), 10);
+  return Number.isNaN(parsed) || parsed <= 0 ? fallback : parsed;
+};
+
+const sanitizeSortDirection = (value: unknown): 'asc' | 'desc' => {
+  if (typeof value !== 'string') {
+    return 'desc';
+  }
+
+  return value.toLowerCase() === 'asc' ? 'asc' : 'desc';
+};
+
+export const listTemplates = async (req: Request, res: Response): Promise<void> => {
   try {
-    const templates = await getTemplates();
-    res.json(templates);
+    const page = toPositiveInt(req.query.page, 1);
+    const pageSize = Math.min(200, toPositiveInt(req.query.pageSize, 50));
+    const sortField = typeof req.query.sortField === 'string' ? req.query.sortField : undefined;
+    const search = typeof req.query.search === 'string' ? req.query.search : undefined;
+    const sortDirection = sanitizeSortDirection(req.query.sortDirection);
+
+    const result = await getTemplatesPaginated({
+      page,
+      pageSize,
+      search,
+      sortField,
+      sortDirection
+    });
+
+    res.json({
+      items: result.data,
+      total: result.total,
+      page,
+      pageSize
+    });
   } catch (error) {
     res.status(500).json({ message: 'Unable to fetch templates.', error: (error as Error).message });
   }
