@@ -85,14 +85,14 @@ const SORTABLE_COLUMNS: Record<string, string> = {
   id: 'ID',
   region: 'Region',
   country: 'Country',
-  jobFamily: 'JobFamily',
-  locationName: 'LocationName',
-  locationId: 'LocationID',
+  jobfamily: 'JobFamily',
+  locationname: 'LocationName',
+  locationid: 'LocationID',
   company: 'Company',
-  costCenterDivision: 'CostCenterDivision',
-  templateId: 'TemplateID',
-  templateObjectGuid: 'TemplateObjectGUID',
-  movePath: 'MovePath'
+  costcenterdivision: 'CostCenterDivision',
+  templateid: 'TemplateID',
+  templateobjectguid: 'TemplateObjectGUID',
+  movepath: 'MovePath'
 };
 
 const LIKE_SPECIAL_CHARS = /[%_\[\]]/g;
